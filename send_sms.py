@@ -12,5 +12,5 @@ client = Client(account_sid, auth_token)
 client.api.account.messages.create(
     to=os.environ["MY_PHONE_NUMBER"],
     from_="+16072892221",
-    body="Hi! I’m the David Kidder chatbot!\n
-    have you generated any new ideas?")
+    body="Hi! I’m the David Kidder chatbot!\n"
+         "have you generated any new ideas?")
