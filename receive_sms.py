@@ -44,16 +44,14 @@ def survey():
             ]
 
     body = request.values.get('Body').lower()
+    resp = MessagingResponse()
     if 'reset' in body:
         main_counter = 0
 
     ### Main questions
+    current_question = question_list[main_counter]
+    current_sub_question = sub_question_list[main_counter]
     if is_main_question == True:
-        current_question = question_list[main_counter]
-        current_sub_question = sub_question_list[main_counter]
-
-        resp = MessagingResponse()
-
         if body == 'y' or 'yes' in body:
             # Respond with sub question here
             # resp.message("You responded with yes, thanks!\n"
@@ -63,11 +61,9 @@ def survey():
         elif body == 'n' or 'no' in body:
             main_counter += 1
             resp.message(current_question)
-
-        session['main_counter'] = main_counter
-        ###
     else:
         resp.message(current_question)
+        main_counter += 1
         is_main_question = True
 
     session['main_counter'] = main_counter
