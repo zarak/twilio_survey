@@ -49,9 +49,6 @@ def survey():
     resp = MessagingResponse()
 
     num_questions = len(question_list)
-    if 'reset' in body:
-        main_counter = 0
-        is_main_question = True
 
     if main_counter >= num_questions:
         main_counter = 0
@@ -60,7 +57,10 @@ def survey():
     else:
 
         if is_main_question == True:
-            if body == 'y' or 'yes' in body:
+            if 'reset' in body:
+                main_counter = 0
+                is_main_question = True
+            elif body == 'y' or 'yes' in body:
                 is_main_question = False
             else:
                 main_counter += 1
@@ -68,8 +68,8 @@ def survey():
             resp.message(questions[main_counter][not is_main_question])
         else:
             is_main_question = True
-            resp.message(questions[main_counter][not is_main_question])
             main_counter += 1
+            resp.message(questions[main_counter][not is_main_question])
 
     session['main_counter'] = main_counter
     session['is_main_question'] = is_main_question
