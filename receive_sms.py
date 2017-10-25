@@ -16,7 +16,9 @@ def survey():
         "+14158675311": "Virgil",
     }
 
-    counter = session.get('counter', 0)
+    main_counter = session.get('main_counter', 0)
+    sub_counter = session.get('sub_counter', 0)
+    is_sub_question = session.get('sub_question', False)
 
     question_list = [
             "Have you generated any new ideas?",
@@ -37,20 +39,29 @@ def survey():
             ]
 
     from_number = request.values.get('From', None)
-    current_question = question_list[counter]
+    current_question = question_list[main_counter]
     body = request.values.get('Body').lower()
 
     resp = MessagingResponse()
-    current_question = question_list[counter]
     resp.message(current_question)
 
-    if body == 'y' or 'yes' in body:
-        resp.message(sub_questions[0][0])
-    elif body == 'n' or 'no' in body:
-        counter += 1
-        resp.message(question_list[counter])
-    elif 'reset' in body:
-        counter = 0
+    if 'reset' in body:
+        main_counter = sub_counter = 0
+
+    if is_sub_question == False:
+        if body == 'y' or 'yes' in body:
+            resp.message(question_list[main_counter])
+            is_sub_question = True
+        elif body == 'n' or 'no' in body:
+            main_counter += 1
+            resp.message(question_list[counter])
+            is_sub_question = False
+    else:
+        pass
+
+
+    session['main_counter'] = main_counter
+    session['sub_question'] = is_sub_question
 
     return str(resp)
 
