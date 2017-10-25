@@ -43,28 +43,33 @@ def survey():
             "Which idea? And from what stage to what stage?"
             ]
 
+    questions = list(zip(question_list, sub_question_list))
+
     body = request.values.get('Body').lower()
     resp = MessagingResponse()
+
+    num_questions = len(question_list)
     if 'reset' in body:
         main_counter = 0
-
-    ### Main questions
-    current_question = question_list[main_counter]
-    current_sub_question = sub_question_list[main_counter]
-    if is_main_question == True:
-        if body == 'y' or 'yes' in body:
-            # Respond with sub question here
-            # resp.message("You responded with yes, thanks!\n"
-                    # "(You may respond with N to move on to the next question)")
-            resp.message(current_sub_question)
-            is_main_question = False
-        elif body == 'n' or 'no' in body:
-            main_counter += 1
-            resp.message(current_question)
-    else:
-        resp.message(current_question)
-        main_counter += 1
         is_main_question = True
+
+    if main_counter >= num_questions:
+        main_counter = 0
+        is_main_question = True
+        resp.message("That's the end of the survey. Thanks for your time!")
+    else:
+
+        if is_main_question == True:
+            if body == 'y' or 'yes' in body:
+                is_main_question = False
+            else:
+                main_counter += 1
+            
+            resp.message(questions[main_counter][not is_main_question])
+        else:
+            is_main_question = True
+            resp.message(questions[main_counter][not is_main_question])
+            main_counter += 1
 
     session['main_counter'] = main_counter
     session['is_main_question'] = is_main_question
