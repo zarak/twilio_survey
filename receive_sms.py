@@ -18,7 +18,7 @@ def survey():
 
     main_counter = session.get('main_counter', 0)
     # sub_counter = session.get('sub_counter', 0)
-    # is_sub_question = session.get('sub_question', False)
+    is_main_question = session.get('is_main_question', True)
 
     question_list = [
             "Have you generated any new ideas?",
@@ -34,22 +34,44 @@ def survey():
             # "Which idea? And from what stage to what stage?"
             ]
 
+    sub_question_list = [
+            "Type in the name of the idea and the seed stage",
+            "Type in the name of the idea",
+            # "Type in the reason for killing the idea",
+            "What ideas is on hold?",
+            "From what old name to what new name?",
+            "Which idea? And from what stage to what stage?"
+            ]
+
     body = request.values.get('Body').lower()
     if 'reset' in body:
         main_counter = 0
-    current_question = question_list[main_counter]
 
-    resp = MessagingResponse()
+    ### Main questions
+    if is_main_question == True:
+        current_question = question_list[main_counter]
+        current_sub_question = sub_question_list[main_counter]
 
-    if body == 'y' or 'yes' in body:
-        resp.message("You responded with yes, thanks!\n"
-                "(You may respond with N to move on to the next question)")
-    elif body == 'n' or 'no' in body:
-        main_counter += 1
-        resp.message(question_list[main_counter])
+        resp = MessagingResponse()
+
+        if body == 'y' or 'yes' in body:
+            # Respond with sub question here
+            # resp.message("You responded with yes, thanks!\n"
+                    # "(You may respond with N to move on to the next question)")
+            resp.message(current_sub_question)
+            is_main_question = False
+        elif body == 'n' or 'no' in body:
+            main_counter += 1
+            resp.message(current_question)
+
+        session['main_counter'] = main_counter
+        ###
+    else:
+        resp.message(current_question)
+        is_main_question = True
 
     session['main_counter'] = main_counter
-
+    session['is_main_question'] = is_main_question
     return str(resp)
 
 if __name__ == "__main__":
