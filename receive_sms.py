@@ -44,8 +44,6 @@ def survey():
     num_questions = len(question_list)
 
     if main_counter >= num_questions:
-        # main_counter = 0
-        # is_main_question = True
         resp.message("That's the end of the survey. Thanks for your time!")
     else:
         if is_main_question == True:
@@ -57,11 +55,13 @@ def survey():
             else:
                 main_counter += 1
             
-            resp.message(questions[main_counter][not is_main_question])
+            if main_counter < num_questions:
+                resp.message(questions[main_counter][not is_main_question])
         else:
             is_main_question = True
             main_counter += 1
-            resp.message(questions[main_counter][not is_main_question])
+            if main_counter < num_questions:
+                resp.message(questions[main_counter][not is_main_question])
 
     session['main_counter'] = main_counter
     session['is_main_question'] = is_main_question
