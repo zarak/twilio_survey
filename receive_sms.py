@@ -17,21 +17,14 @@ def survey():
     }
 
     main_counter = session.get('main_counter', 0)
-    # sub_counter = session.get('sub_counter', 0)
     is_main_question = session.get('is_main_question', True)
 
     question_list = [
             "Have you generated any new ideas?",
-            # "Type in the name of the idea and the seed stage",
             "Have you killed any ideas?",
-            # "Type in the name of the idea",
-            # "Type in the reason for killing the idea",
             "Any ideas on hold now?",
-            # "What ideas is on hold?",
             "Any name changes this week?",
-            # "From what old name to what new name?",
             "Any ideas advance stages or go backwards?"
-            # "Which idea? And from what stage to what stage?"
             ]
 
     sub_question_list = [
@@ -51,11 +44,10 @@ def survey():
     num_questions = len(question_list)
 
     if main_counter >= num_questions:
-        main_counter = 0
-        is_main_question = True
+        # main_counter = 0
+        # is_main_question = True
         resp.message("That's the end of the survey. Thanks for your time!")
     else:
-
         if is_main_question == True:
             if 'reset' in body:
                 main_counter = 0
