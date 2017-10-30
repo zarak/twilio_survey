@@ -63,6 +63,8 @@ def survey():
             if main_counter < num_questions:
                 resp.message(questions[main_counter][not is_main_question])
 
+    if main_counter == 4 and not is_main_question:
+        main_counter += 1
     session['main_counter'] = main_counter
     session['is_main_question'] = is_main_question
     return str(resp)
